@@ -1,0 +1,4 @@
+pkg_resources==0.0.0
+psycopg2-binary==2.9.6
+pyscopg2==66.0.2
+python-decouple==3.8
