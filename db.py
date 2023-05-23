@@ -61,15 +61,14 @@ class DB:
 
         columns = ','.join(data.keys())
 
-        # Flatten the lists of values and convert them to strings
-        flattened_values = [str(tuple(item)) for item in zip(*data.values())]
+        values = [str(tuple(item)) for item in zip(*data.values())]
 
-        insert_query = f"INSERT INTO db_log ({columns}) VALUES {','.join(flattened_values)};"
+        insert_query = f"INSERT INTO db_log ({columns}) VALUES {','.join(values)};"
         
         # Executando a query para inserção
         self.exec(insert_query)
 
-    def update(self,id, col, val):
-        self.exec(f'UPDATE log set {col}={val} WHERE id={id}')
+    def update(self,id, column, value, table_name =  'db_log'):
+        self.exec(f'UPDATE {table_name} set {column}={value} WHERE id={id};')
         
         
