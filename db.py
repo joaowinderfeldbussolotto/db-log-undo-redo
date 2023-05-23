@@ -12,7 +12,7 @@ class DB:
 
 
     def exec(self, sql):
-        print(sql)
+        if not sql.startswith('SELECT'): print(sql)
         con = None
         result = None
 
@@ -69,6 +69,7 @@ class DB:
         self.exec(insert_query)
 
     def update(self,id, column, value, table_name =  'db_log'):
-        self.exec(f'UPDATE {table_name} set {column}={value} WHERE id={id};')
+        self.exec(f"UPDATE {table_name} set {column}='{value}' WHERE id={id};")
         
-        
+    def selectAll(self, table_name = 'db_log', where = '1=1'):
+        return self.exec(f'SELECT * FROM {table_name} WHERE {where};')
