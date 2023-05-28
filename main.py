@@ -1,15 +1,13 @@
+# -*- coding: utf-8 -*-
 from db import DB
 from recovery import get_commited, get_uncommited, undo_db, redo_db, redo, undo
 from utils import print_table, load_log, get_metadata
 
-
-
-        
 if __name__ == '__main__':
 
     db = DB()
-    METADATA_FILE = 'metadado.json'
-    LOG_FILE = 'entradaLog(1)'
+    METADATA_FILE = 'files/metadado.json'
+    LOG_FILE = 'files/entradaLog(1)'
     metadata = get_metadata(METADATA_FILE)
     log = load_log(LOG_FILE)
     db.create('db_log', list(metadata.keys()))
@@ -18,7 +16,6 @@ if __name__ == '__main__':
     uncomitted = get_uncommited(log, commited)
     print('---------------------------Before recovery------------------------')
     print_table(list(metadata.keys()), db.selectAll())
-
 
     t_undo = undo(log, uncomitted)
     undo_db(t_undo)
@@ -34,6 +31,8 @@ if __name__ == '__main__':
 
     print('---------------------------After redo------------------------')
     print_table(list(metadata.keys()), db.selectAll())
+
+
 
         
 

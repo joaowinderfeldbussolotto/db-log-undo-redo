@@ -44,14 +44,14 @@ def undo(log, uncommited):
 
 def redo(log,commited):
     transactions = []
-    for line in reversed(log):
+    for line in log:
         if (re.match('^<.+,.+,.+,.+,.+>', line)):
             args = re.sub('<|>| ', '', line)
             [transaction, id, col, old, new] = args.split(',')
 
             # Check if the entry already exists in transactions
             exists = False
-            exists = any(entry['transaction'] == transaction and entry['id'] == id and entry['col'] == col for entry in transactions)
+            # exists = any(entry['transaction'] == transaction and entry['id'] == id and entry['col'] == col for entry in transactions)
 
             if transaction in commited and not exists:
                 transactions.append({
@@ -61,7 +61,7 @@ def redo(log,commited):
                 'old': old,
                'new': new})
 
-    return transactions[::-1]
+    return transactions
     
 def verify_incosistency(id, column, value):
     r = db.exec(f"SELECT {column} FROM db_log WHERE id = {id} and {column} = '{value}'")
