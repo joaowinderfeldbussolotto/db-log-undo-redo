@@ -33,14 +33,9 @@ def undo(log, uncommited):
             # exists = any(entry['transaction'] == transaction and entry['id'] == id and entry['col'] == col for entry in transactions)
 
             if transaction in uncommited and not exists:
-                transactions.append({
-                'transaction': transaction,
-                'id': id,
-                'col': col,
-                'old': old,
-               'new': new})
-
-    return transactions
+                if not verify_incosistency(id, col, old):
+                    db.update(id, col, old)
+           
 
 def redo(log,commited):
     transactions = []
@@ -54,14 +49,11 @@ def redo(log,commited):
             # exists = any(entry['transaction'] == transaction and entry['id'] == id and entry['col'] == col for entry in transactions)
 
             if transaction in commited and not exists:
-                transactions.append({
-                'transaction': transaction,
-                'id': id,
-                'col': col,
-                'old': old,
-               'new': new})
+                if not verify_incosistency(id, col, new):
+                        db.update(id, col, new)
 
-    return transactions
+            
+
     
 def verify_incosistency(id, column, value):
     r = db.exec(f"SELECT {column} FROM db_log WHERE id = {id} and {column} = '{value}'")
@@ -69,12 +61,12 @@ def verify_incosistency(id, column, value):
         return False
     return r[0][0]
 
-def redo_db(transactions):
-    for t in transactions:
-        if not verify_incosistency(t['id'], t['col'], t['new']):
-            db.update(t['id'], t['col'], t['new'])
+# def redo_db(transactions):
+#     for t in transactions:
+#         if not verify_incosistency(t['id'], t['col'], t['new']):
+#             db.update(t['id'], t['col'], t['new'])
 
-def undo_db(transactions):
-    for t in transactions:
-        if not verify_incosistency(t['id'], t['col'], t['old']):
-            db.update(t['id'], t['col'], t['old'])
+# def undo_db(transactions):
+#     for t in transactions:
+#         if not verify_incosistency(t['id'], t['col'], t['old']):
+#             db.update(t['id'], t['col'], t['old'])

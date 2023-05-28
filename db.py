@@ -12,7 +12,7 @@ class DB:
 
 
     def exec(self, sql):
-        if not sql.startswith('SELECT'): print(sql)
+        if sql.startswith('UPDATE'): print(sql)
         con = None
         result = None
 
